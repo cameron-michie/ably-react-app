@@ -50,8 +50,17 @@ function App() {
             });
           }}
         >
-          Send Message
+          Send message
         </button>
+
+        <button
+          onClick={() => {
+            console.log(presenceData);          
+          }}
+        >
+          console.log(presence set)
+        </button>
+
         <button
           onClick={() => {
             updateStatus({ foo: 'baz' });
