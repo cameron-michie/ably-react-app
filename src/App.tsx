@@ -82,7 +82,7 @@ function App() {
             console.log(presenceData);          
           }}
         >
-          console.log(presence set)
+          console.log(presence data from usePresenceListener)
         </button>
 
         <button
@@ -96,7 +96,7 @@ function App() {
         <button
           onClick={fetchPresenceData}
         >
-          Query REST presence data
+          Query REST API presence members
         </button>
       </div>
         
@@ -105,19 +105,14 @@ function App() {
         <div style={{textIndent: '50px'}}> 
           <h2>Messages</h2>
           <ul>{messagePreviews}</ul> 
-          <h2>Present Clients</h2>
+          <h2>Present Clients from usePresenceListener</h2>
           <ul>{presentClients}</ul>
           <h2>REST Presence Retrieve</h2>
           {restPresenceData.length > 0 ? (
           <ul>
             {restPresenceData.map((item, index) => (
               <li key={index}>
-                <p>Client ID: {item.clientId}</p>
-                <p>Connection ID: {item.connectionId}</p>
-                <p>Timestamp: {new Date(item.timestamp).toLocaleString()}</p>
-                <p>Encoding: {item.encoding}</p>
-                <p>Data: {JSON.stringify(item.data)}</p>
-                <p>Action: {item.action}</p>
+                <p>{item.clientId}: {JSON.stringify(item.data)}</p>
               </li>
             ))}
           </ul>
