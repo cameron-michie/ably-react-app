@@ -27,6 +27,30 @@ function App() {
     setConnectionState(stateChange.current);
   });
 
+  interface PresenceDataItem {
+    clientId: string;
+    connectionId: string;
+    timestamp: number;
+    encoding: string;
+    data: any; // You can further specify this type if you know the structure of `data`.
+    action: number; // Assuming action is a number, change this according to the actual expected type.
+  }
+  
+  const [restPresenceData, setRestPresenceData] = useState<PresenceDataItem[]>([]);
+
+  const fetchPresenceData = async () => {
+      const response = await fetch('https://rest.ably.io/channels/your-channel-name/presence', {
+        headers: {
+          'Authorization': `Basic dnAzZjJ3LlVzS1lJQTpNYlJWbUVqcXBrV0hORThvd2YwOGNrY0Z3MXRjNlVjVU5nTHU5dGhTZ2pj`,
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setRestPresenceData(data);
+    }
 
   const messagePreviews = messages.map((message, idx) => <MessagePreview key={idx} message={message} />);
 
@@ -68,6 +92,12 @@ function App() {
         >
           Update presence status to baz
         </button>
+
+        <button
+          onClick={fetchPresenceData}
+        >
+          Query REST presence data
+        </button>
       </div>
         
       <div style={{ margin: '25px' }}>
@@ -77,6 +107,23 @@ function App() {
           <ul>{messagePreviews}</ul> 
           <h2>Present Clients</h2>
           <ul>{presentClients}</ul>
+          <h2>REST Presence Retrieve</h2>
+          {restPresenceData.length > 0 ? (
+          <ul>
+            {restPresenceData.map((item, index) => (
+              <li key={index}>
+                <p>Client ID: {item.clientId}</p>
+                <p>Connection ID: {item.connectionId}</p>
+                <p>Timestamp: {new Date(item.timestamp).toLocaleString()}</p>
+                <p>Encoding: {item.encoding}</p>
+                <p>Data: {JSON.stringify(item.data)}</p>
+                <p>Action: {item.action}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No REST presence data loaded</p>
+        )}
         </div>
       </div>
     </div>
